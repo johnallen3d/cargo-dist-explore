@@ -16,9 +16,9 @@ jobs:
       - uses: googleapis/release-please-action@v4
         id: release
         with:
-          # Use config file approach instead of inline release-type
-          config-file: release-please-config.json
-          manifest-file: .release-please-manifest.json
-
+          # Release configuration for Rust workspace
+          release-type: rust
+          package-name: cargo-dist-explore
+          
           # Token for creating PRs and releases
           token: ${{ secrets.GITHUB_TOKEN }}
