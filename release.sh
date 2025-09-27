@@ -1,26 +1,27 @@
 #!/bin/bash
 set -e
 
-echo "Select version bump type:"
-echo "1) patch (x.y.Z)"
-echo "2) minor (x.Y.0)"  
-echo "3) major (X.0.0)"
-read -p "Enter choice [1-3]: " choice
+# Get current version
+CURRENT_VERSION=$(grep -E '^\s*version\s*=' Cargo.toml | head -1 | sed 's/.*"\(.*\)".*/\1/')
+echo "Current version: $CURRENT_VERSION"
 
-case $choice in
-    1) BUMP_TYPE="patch" ;;
-    2) BUMP_TYPE="minor" ;;
-    3) BUMP_TYPE="major" ;;
-    *) echo "Invalid choice"; exit 1 ;;
-esac
+# Use git-cliff to determine the next version based on conventional commits
+echo "Analyzing commits to determine version bump..."
+BUMP_OUTPUT=$(git-cliff --bumped-version -v 2>&1)
+SUGGESTED_VERSION=$(echo "$BUMP_OUTPUT" | grep "Bumping the version to" | sed 's/.*Bumping the version to //' | tr -d ' ')
 
-# Use cargo-edit to bump version
-echo "Bumping $BUMP_TYPE version with cargo-edit..."
-cargo set-version --bump $BUMP_TYPE
+if [ -z "$SUGGESTED_VERSION" ]; then
+    echo "No version bump needed (no conventional commits since last release)"
+    exit 0
+fi
 
-# Get the new version after bump
-NEW_VERSION=$(grep -E '^\s*version\s*=' Cargo.toml | head -1 | sed 's/.*"\(.*\)".*/\1/')
-echo "New version: $NEW_VERSION"
+# Remove 'v' prefix if present
+NEW_VERSION=${SUGGESTED_VERSION#v}
+echo "Conventional commits suggest: $NEW_VERSION"
+
+# Use cargo-edit to set the specific version
+echo "Setting version to $NEW_VERSION..."
+cargo set-version $NEW_VERSION
 
 # Generate changelog with the new version tag
 echo "Generating changelog..."
