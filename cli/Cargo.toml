@@ -3,6 +3,7 @@ name = "cli"
 version.workspace = true
 edition.workspace = true
 repository.workspace = true
+changelog = "../CHANGELOG.md"
 
 [[bin]]
 name = "cli"
