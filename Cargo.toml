@@ -2,5 +2,11 @@
 name = "dist"
 version = "0.1.0"
 edition = "2024"
+repository = "https://github.com/your-username/dist-playground"
 
 [dependencies]
+
+# The profile that 'dist' will build with
+[profile.dist]
+inherits = "release"
+lto = "thin"
