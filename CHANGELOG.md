@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [unreleased]
+
+### 🐛 Bug Fixes
+
+- Update changelog with proper v0.1.9 section
+
 ## [0.1.9] - 2025-09-27
 
 ### 🚀 Features
