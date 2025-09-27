@@ -2,7 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
-## [unreleased]
+## [0.1.12] - 2025-09-27
+
+### 🚜 Refactor
+
+- Simplify release script to properly use cargo-edit
+
+## [0.1.11] - 2025-09-27
 
 ### 🐛 Bug Fixes
 
