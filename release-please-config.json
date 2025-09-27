@@ -1,6 +1,6 @@
 {
   "packages": {
-    ".": {
+    "cli": {
       "release-type": "rust"
     }
   }
