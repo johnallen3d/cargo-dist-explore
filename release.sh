@@ -34,7 +34,6 @@ git add Cargo.toml cli/Cargo.toml web/Cargo.toml Cargo.lock CHANGELOG.md
 git commit -m "chore(release): prepare for v$NEW_VERSION"
 
 # Create tag
-git tag "v$NEW_VERSION"
+git tag "v$NEW_VERSION" -m "v$NEW_VERSION"
 
-echo "Release prepared! Push with:"
-echo "  git push origin main && git push origin v$NEW_VERSION"
+git push origin main && git push origin "v$NEW_VERSION"
