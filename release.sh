@@ -22,9 +22,9 @@ cargo set-version --bump $BUMP_TYPE
 NEW_VERSION=$(grep -E '^\s*version\s*=' Cargo.toml | head -1 | sed 's/.*"\(.*\)".*/\1/')
 echo "New version: $NEW_VERSION"
 
-# Generate changelog
+# Generate changelog with the new version tag
 echo "Generating changelog..."
-git-cliff --output CHANGELOG.md
+git-cliff --tag "v$NEW_VERSION" --output CHANGELOG.md
 
 # Stage changes
 git add Cargo.toml cli/Cargo.toml web/Cargo.toml Cargo.lock CHANGELOG.md
