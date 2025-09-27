@@ -1,10 +1,11 @@
-[package]
-name = "dist"
+[workspace]
+members = ["web", "cli"]
+resolver = "2"
+
+[workspace.package]
 version = "0.1.4"
 edition = "2024"
 repository = "https://github.com/johnallen3d/cargo-dist-explore"
-
-[dependencies]
 
 # The profile that 'dist' will build with
 [profile.dist]

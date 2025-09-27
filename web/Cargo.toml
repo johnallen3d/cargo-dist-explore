@@ -1,0 +1,11 @@
+[package]
+name = "web"
+version.workspace = true
+edition.workspace = true
+repository.workspace = true
+
+[[bin]]
+name = "web"
+path = "src/main.rs"
+
+[dependencies]
