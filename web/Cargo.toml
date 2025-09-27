@@ -4,6 +4,10 @@ version.workspace = true
 edition.workspace = true
 repository.workspace = true
 
+# Don't publish this crate with cargo-dist
+[package.metadata.dist]
+dist = false
+
 [[bin]]
 name = "web"
 path = "src/main.rs"

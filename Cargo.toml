@@ -17,8 +17,6 @@ ci = "github"
 installers = ["shell"]
 # Target platforms to build apps for (Rust target-triple syntax)
 targets = ["x86_64-unknown-linux-gnu", "aarch64-apple-darwin"]
-# Which crates to publish binaries for
-publish = ["cli"]
 
 # The profile that 'dist' will build with
 [profile.dist]
