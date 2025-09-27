@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.0] - 2025-09-27
+
+### 🚀 Features
+
+- Add automatic version bumping based on conventional commits
+
+### 🐛 Bug Fixes
+
+- Generate changelog with proper version tag
+
 ## [0.1.12] - 2025-09-27
 
 ### 🚜 Refactor
