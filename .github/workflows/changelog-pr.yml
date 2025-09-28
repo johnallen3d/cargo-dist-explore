@@ -180,26 +180,13 @@ jobs:
 
           # Check if branch already exists remotely
           if git ls-remote --exit-code --heads origin $BRANCH_NAME >/dev/null 2>&1; then
-            echo "Branch $BRANCH_NAME already exists, handling local changes..."
+            echo "Branch $BRANCH_NAME already exists, updating it..."
             git fetch origin $BRANCH_NAME
             
-            # Stash any local changes to avoid conflicts
-            if ! git diff --quiet || ! git diff --staged --quiet; then
-              echo "Stashing local changes before checkout..."
-              git stash push -m "Temporary stash for branch checkout"
-              STASHED=true
-            else
-              STASHED=false
-            fi
-            
-            # Force checkout the remote branch
-            git checkout -B $BRANCH_NAME origin/$BRANCH_NAME
-            
-            # Restore stashed changes if any
-            if [ "$STASHED" = "true" ]; then
-              echo "Restoring stashed changes..."
-              git stash pop
-            fi
+            # For existing release branches, reset them to current main + new changes
+            # This avoids merge conflicts from previous branch state
+            echo "Resetting existing release branch to current main state..."
+            git checkout -B $BRANCH_NAME
           else
             echo "Creating new branch: $BRANCH_NAME"
             git checkout -b $BRANCH_NAME
