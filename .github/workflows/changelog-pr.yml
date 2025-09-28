@@ -150,7 +150,7 @@ jobs:
         run: |
           set -e
           # Check if there's already a release PR open
-          EXISTING_PR=$(gh pr list --state open --search "in:title release v" --json number,title --jq '.[0].number' 2>/dev/null || echo "")
+          EXISTING_PR=$(gh pr list --state open --search "in:title chore: release" --json number,title --jq '.[0].number' 2>/dev/null || echo "")
 
           if [ -n "$EXISTING_PR" ] && [ "$EXISTING_PR" != "null" ]; then
             echo "existing_pr=$EXISTING_PR" >> $GITHUB_OUTPUT
