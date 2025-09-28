@@ -2,6 +2,31 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.0.0] - 2025-09-28
+
+### 🚀 Features
+
+- [**breaking**] Change cli args ([#10](https://github.com/johnallen3d/cargo-dist-explore/issues/10))
+- Add config command to show configuration directory
+
+### 🐛 Bug Fixes
+
+- Include Cargo.lock in release PR commits and update cargo-dist config
+- Use RELEASE_PR_TOKEN for PR creation and GitHub CLI operations
+- Minor formatting ([#9](https://github.com/johnallen3d/cargo-dist-explore/issues/9))
+- Add cargo bin directory to PATH for cargo-binstall
+- Simplify tool installation with direct GitHub releases
+- Use only pre-built binaries for fast tool installation
+- Use cargo-quickinstall script for cargo-edit installation
+
+### 📚 Documentation
+
+- Add test header to README
+
+### ⚡ Performance
+
+- Optimize tool installation with cargo-binstall
+
 ## [2.2.0] - 2025-09-28
 
 ### 🚀 Features
@@ -14,10 +39,12 @@ All notable changes to this project will be documented in this file.
 - Update release workflow tag pattern to support v-prefixed tags
 - Correct cargo-edit installation check in workflow
 - Use --force flag for cargo install to handle caching conflicts
+- Update release workflow tag pattern for cargo-dist compatibility
 
 ### ⚙️ Miscellaneous Tasks
 
 - Release v2.1.0 ([#6](https://github.com/johnallen3d/cargo-dist-explore/issues/6))
+- Release v2.2.0 ([#8](https://github.com/johnallen3d/cargo-dist-explore/issues/8))
 
 ## [2.1.0] - 2025-09-28
 
