@@ -2,11 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.2.1] - 2025-09-28
+
+### 🐛 Bug Fixes
+
+- Complete release automation by using existing RELEASE_PR_TOKEN
+
 ## [3.2.0] - 2025-09-28
 
 ### 🚀 Features
 
 - Add release flow documentation
+
+### ⚙️ Miscellaneous Tasks
+
+- Release v3.2.0 ([#15](https://github.com/johnallen3d/cargo-dist-explore/issues/15))
 
 ## [3.1.1] - 2025-09-28
 
