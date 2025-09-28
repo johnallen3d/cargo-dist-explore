@@ -26,12 +26,58 @@ jobs:
           # Use the custom token with enhanced permissions
           token: ${{ secrets.RELEASE_PR_TOKEN }}
 
+      - name: Check if changes warrant a release
+        id: check_changes
+        run: |
+          set -e
+          
+          # Get the latest tag
+          LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          
+          if [ -z "$LATEST_TAG" ]; then
+            echo "No previous tags found, allowing release"
+            echo "should_release=true" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          
+          # Get changed files since last tag
+          CHANGED_FILES=$(git diff --name-only ${LATEST_TAG}..HEAD || true)
+          
+          if [ -z "$CHANGED_FILES" ]; then
+            echo "No changed files found since $LATEST_TAG"
+            echo "should_release=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          
+          echo "Changed files since $LATEST_TAG:"
+          echo "$CHANGED_FILES"
+          
+          # Count files that are NOT docs/CI related
+          SIGNIFICANT_CHANGES=$(echo "$CHANGED_FILES" | grep -v -E '\.(md|txt|rst)$|^\.github/|^docs/|^scripts/|^cliff\.toml$|^\.gitignore$|^LICENSE|^CHANGELOG\.md$' || true)
+          
+          if [ -z "$SIGNIFICANT_CHANGES" ]; then
+            echo "Only documentation/CI changes detected. Skipping release."
+            echo "should_release=false" >> $GITHUB_OUTPUT
+          else
+            echo "Significant code changes detected:"
+            echo "$SIGNIFICANT_CHANGES"
+            echo "should_release=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Skip if only docs/CI changes
+        if: steps.check_changes.outputs.should_release == 'false'
+        run: |
+          echo "Skipping release creation - only documentation or CI changes detected."
+          exit 0
+
       - name: Setup Rust
+        if: steps.check_changes.outputs.should_release == 'true'
         uses: dtolnay/rust-toolchain@stable
         with:
           toolchain: stable
 
       - name: Cache cargo tools
+        if: steps.check_changes.outputs.should_release == 'true'
         uses: actions/cache@v4
         with:
           path: ~/.cargo/bin
@@ -40,6 +86,7 @@ jobs:
             ${{ runner.os }}-cargo-tools-
 
       - name: Install git-cliff and cargo-edit  
+        if: steps.check_changes.outputs.should_release == 'true'
         run: |
           # Install git-cliff from GitHub releases (fast binary download)
           curl -L "https://github.com/orhun/git-cliff/releases/latest/download/git-cliff-2.10.1-x86_64-unknown-linux-gnu.tar.gz" | tar -xzC /tmp
@@ -49,6 +96,7 @@ jobs:
           curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-quickinstall/main/install.sh | bash -s -- --no-binstall cargo-edit
 
       - name: Check for new commits since last tag
+        if: steps.check_changes.outputs.should_release == 'true'
         id: check_commits
         run: |
           set -e
@@ -82,13 +130,13 @@ jobs:
           echo "latest_tag=$LATEST_TAG" >> $GITHUB_OUTPUT
 
       - name: Skip if no commits
-        if: steps.check_commits.outputs.has_commits == 'false'
+        if: steps.check_changes.outputs.should_release == 'true' && steps.check_commits.outputs.has_commits == 'false'
         run: |
           echo "No conventional commits found. Skipping release PR creation."
           exit 0
 
       - name: Determine version bump type
-        if: steps.check_commits.outputs.has_commits == 'true'
+        if: steps.check_changes.outputs.should_release == 'true' && steps.check_commits.outputs.has_commits == 'true'
         id: bump_type
         run: |
           set -e
@@ -120,7 +168,7 @@ jobs:
           echo "Determined bump type: $BUMP_TYPE"
 
       - name: Bump version and generate changelog
-        if: steps.check_commits.outputs.has_commits == 'true'
+        if: steps.check_changes.outputs.should_release == 'true' && steps.check_commits.outputs.has_commits == 'true'
         id: version_bump
         run: |
           set -e

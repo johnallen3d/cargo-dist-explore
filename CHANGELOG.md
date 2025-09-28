@@ -2,6 +2,31 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### 🚀 Features
+
+- Add intelligent change detection to skip releases for docs/CI-only changes
+- Enhanced workflow efficiency by filtering out documentation and CI-only modifications  
+- Remove date suffix from changelog template for cleaner release names
+
+### 🎯 Release Automation Status
+
+**FULLY OPERATIONAL** - Complete PR-based release automation with intelligent change detection:
+
+1. **Release - Prepare**: Creates release PRs with version bumps and changelog updates
+2. **Release - Tag**: Creates git tags when release PRs are merged  
+3. **Release - Publish**: cargo-dist builds cross-platform binaries and creates GitHub releases
+
+**Key Features:**
+- ✅ Smart change detection (skips releases for docs/CI-only changes)
+- ✅ Conventional commit analysis for automatic version bumping
+- ✅ Generated changelog content included in GitHub release notes
+- ✅ Cross-platform binary builds (macOS Apple Silicon, Linux x64)
+- ✅ Shell installer generation
+- ✅ Monolithic workspace versioning
+- ✅ Branch protection with GitHub Flow (feature branches → PRs → main)
+
 ## [3.6.0] - 2025-09-28
 
 ### 🚀 Features
