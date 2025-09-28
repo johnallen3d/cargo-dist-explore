@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.1.0] - 2025-09-28
+
+### 🚀 Features
+
+- Remove config command ([#12](https://github.com/johnallen3d/cargo-dist-explore/issues/12))
+
 ## [3.0.0] - 2025-09-28
 
 ### 🚀 Features
@@ -26,6 +32,10 @@ All notable changes to this project will be documented in this file.
 ### ⚡ Performance
 
 - Optimize tool installation with cargo-binstall
+
+### ⚙️ Miscellaneous Tasks
+
+- Release v3.0.0 ([#11](https://github.com/johnallen3d/cargo-dist-explore/issues/11))
 
 ## [2.2.0] - 2025-09-28
 
