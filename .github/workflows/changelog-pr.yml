@@ -144,10 +144,10 @@ jobs:
           echo "✅ Version bumped from $CURRENT_VERSION to $NEW_VERSION"
           echo "✅ Changelog generated successfully"
 
-       - name: Check for existing release PR
-         if: steps.check_commits.outputs.has_commits == 'true'
-         id: check_pr
-         run: |
+      - name: Check for existing release PR
+        if: steps.check_commits.outputs.has_commits == 'true'
+        id: check_pr
+        run: |
            set -e
            NEW_VERSION="${{ steps.version_bump.outputs.new_version }}"
            
