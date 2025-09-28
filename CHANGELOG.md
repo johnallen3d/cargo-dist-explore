@@ -2,11 +2,27 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.3.0] - 2025-09-28
+
+### 🚀 Features
+
+- Add project description to README ([#20](https://github.com/johnallen3d/cargo-dist-explore/issues/20))
+
+### 🐛 Bug Fixes
+
+- Resolve version mismatch bug in release automation ([#19](https://github.com/johnallen3d/cargo-dist-explore/issues/19))
+- Correct YAML indentation errors in workflow files ([#21](https://github.com/johnallen3d/cargo-dist-explore/issues/21))
+
 ## [3.2.2] - 2025-09-28
+
+### 🚀 Features
+
+- Update cli output ([#18](https://github.com/johnallen3d/cargo-dist-explore/issues/18))
 
 ### ⚙️ Miscellaneous Tasks
 
 - Re-init cargo-dist
+- Release v3.2.2 ([#17](https://github.com/johnallen3d/cargo-dist-explore/issues/17))
 
 ## [3.2.1] - 2025-09-28
 
