@@ -5,19 +5,19 @@ fn main() {
 
     if args.len() > 1 {
         match args[1].as_str() {
-            "--version" => {
+            "version" => {
                 println!("cargo-dist-explore CLI v{}", env!("CARGO_PKG_VERSION"));
                 return;
             }
-            "--help" => {
+            "help" => {
                 println!("cargo-dist-explore CLI v{}", env!("CARGO_PKG_VERSION"));
                 println!();
                 println!("USAGE:");
-                println!("    cli [OPTIONS]");
+                println!("    cli [COMMANDS]");
                 println!();
-                println!("OPTIONS:");
-                println!("    --version    Show version information");
-                println!("    --help       Show this help message");
+                println!("COMMANDS:");
+                println!("    version    Show version information");
+                println!("    help       Show this help message");
                 return;
             }
             _ => {}
@@ -28,4 +28,3 @@ fn main() {
     println!("Running command-line interface");
     println!("Use --help for usage information");
 }
-
