@@ -62,9 +62,9 @@ This is a **Rust workspace** with **monolithic versioning**:
 This provides simpler monolithic releases while maintaining professional changelog generation and cross-platform distribution.
 
 ## Workflow Files
-- `.github/workflows/changelog-pr.yml` - Creates release PRs automatically
-- `.github/workflows/release-on-merge.yml` - Creates tags when PRs merge (requires RELEASE_PAT)
-- `.github/workflows/release.yml` - cargo-dist release automation
+- `.github/workflows/release-prepare.yml` - Creates release PRs automatically
+- `.github/workflows/release-tag.yml` - Creates tags when PRs merge (requires RELEASE_PAT)  
+- `.github/workflows/release.yml` - cargo-dist release automation (filename required by cargo-dist)
 
 ## Setup Requirements
 **Repository Secrets:**
