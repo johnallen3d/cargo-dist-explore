@@ -41,9 +41,9 @@ jobs:
 
       - name: Install cargo-edit and git-cliff
         run: |
-          # Only install if not cached
-          command -v cargo-set-version >/dev/null || cargo install cargo-edit
-          command -v git-cliff >/dev/null || cargo install git-cliff
+          # Install tools (use --force to handle cache conflicts)
+          cargo install cargo-edit --force
+          cargo install git-cliff --force
 
       - name: Check for new commits since last tag
         id: check_commits
