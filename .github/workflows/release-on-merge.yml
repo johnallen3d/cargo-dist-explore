@@ -1,5 +1,9 @@
 name: Release on PR Merge
 
+# This workflow creates release tags when Release PRs are merged.
+# IMPORTANT: Uses RELEASE_PR_TOKEN (same as changelog-pr.yml) to trigger downstream workflows.
+# The default GITHUB_TOKEN cannot trigger workflows for security reasons.
+
 on:
   pull_request:
     types: [closed]
@@ -22,6 +26,7 @@ jobs:
         with:
           fetch-depth: 0
           ref: main
+          token: ${{ secrets.RELEASE_PR_TOKEN }}
 
       - name: Extract version from PR title
         id: extract_version
@@ -66,29 +71,34 @@ jobs:
 
       - name: Create release tag
         if: steps.check_tag.outputs.tag_exists == 'false'
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_PR_TOKEN }}
         run: |
-          VERSION="${{ steps.extract_version.outputs.version }}"
-          TAG="v$VERSION"
+           VERSION="${{ steps.extract_version.outputs.version }}"
+           TAG="v$VERSION"
 
-          # Configure git
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+           # Configure git with PAT authentication
+           git config user.name "github-actions[bot]"
+           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+           
+           # Set up authentication using the PAT
+           git remote set-url origin "https://x-access-token:${{ secrets.RELEASE_PR_TOKEN }}@github.com/${{ github.repository }}.git"
 
-          # Create annotated tag
-          git tag -a "$TAG" -m "Release $TAG
+           # Create annotated tag
+           git tag -a "$TAG" -m "Release $TAG
 
-          Automated release created from PR merge.
+           Automated release created from PR merge.
 
-          This tag triggers the cargo-dist release workflow which will:
-          - Build cross-platform binaries
-          - Create GitHub release with changelog
-          - Upload installers and artifacts"
+           This tag triggers the cargo-dist release workflow which will:
+           - Build cross-platform binaries
+           - Create GitHub release with changelog
+           - Upload installers and artifacts"
 
-          # Push the tag
-          git push origin "$TAG"
+           # Push the tag using PAT authentication
+           git push origin "$TAG"
 
-          echo "🎉 Created and pushed tag: $TAG"
-          echo "🚀 This will trigger the cargo-dist release workflow"
+           echo "🎉 Created and pushed tag: $TAG"
+           echo "🚀 This will trigger the cargo-dist release workflow"
 
       - name: Skip if tag exists
         if: steps.check_tag.outputs.tag_exists == 'true'

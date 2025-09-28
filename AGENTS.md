@@ -63,8 +63,15 @@ This provides simpler monolithic releases while maintaining professional changel
 
 ## Workflow Files
 - `.github/workflows/changelog-pr.yml` - Creates release PRs automatically
-- `.github/workflows/release-on-merge.yml` - Creates tags when PRs merge
+- `.github/workflows/release-on-merge.yml` - Creates tags when PRs merge (requires RELEASE_PAT)
 - `.github/workflows/release.yml` - cargo-dist release automation
+
+## Setup Requirements
+**Repository Secrets:**
+- `RELEASE_PR_TOKEN` - Personal Access Token with `repo` permissions (already configured)
+  - Used by both changelog-pr.yml and release-on-merge.yml workflows
+  - Default `GITHUB_TOKEN` cannot trigger subsequent workflows due to GitHub security restrictions
+  - PAT enables tag creation to properly trigger cargo-dist releases
 
 ## Agent Guidelines
 - **Version Bumping**: Use conventional commits - automation handles everything
@@ -73,3 +80,4 @@ This provides simpler monolithic releases while maintaining professional changel
 - **Testing**: Run `cargo test` before merging release PRs
 - **Distribution**: cargo-dist handles all platform builds and GitHub releases
 - **Emergency**: Use `./scripts/bump-version.sh` only if automation fails
+- **Token Setup**: Uses existing RELEASE_PR_TOKEN for tag-triggered releases
