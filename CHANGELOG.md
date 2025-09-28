@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.2.0] - 2025-09-28
+
+### 🚀 Features
+
+- Add --version command line option ([#7](https://github.com/johnallen3d/cargo-dist-explore/issues/7))
+- Add --help command line option
+
+### 🐛 Bug Fixes
+
+- Update release workflow tag pattern to support v-prefixed tags
+- Correct cargo-edit installation check in workflow
+- Use --force flag for cargo install to handle caching conflicts
+
+### ⚙️ Miscellaneous Tasks
+
+- Release v2.1.0 ([#6](https://github.com/johnallen3d/cargo-dist-explore/issues/6))
+
 ## [2.1.0] - 2025-09-28
 
 ### 🚀 Features
@@ -15,6 +32,10 @@ All notable changes to this project will be documented in this file.
 ### 📚 Documentation
 
 - Update AGENTS.md with new PR-based release workflow
+
+### ⚙️ Miscellaneous Tasks
+
+- Release v2.1.0 ([#5](https://github.com/johnallen3d/cargo-dist-explore/issues/5))
 
 ## [2.0.0] - 2025-09-28
 
