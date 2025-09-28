@@ -2,11 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.5.0] - 2025-09-28
+
+### 🚀 Features
+
+- Rename workflow to 'Create Release Tag' for clarity
+
 ## [3.4.1] - 2025-09-28
 
 ### 🐛 Bug Fixes
 
 - Rename automation plan to avoid cargo-dist confusion
+- Rename automation plan to avoid cargo-dist confusion ([#25](https://github.com/johnallen3d/cargo-dist-explore/issues/25))
+
+### ⚙️ Miscellaneous Tasks
+
+- Release v3.4.1 ([#26](https://github.com/johnallen3d/cargo-dist-explore/issues/26))
 
 ## [3.4.0] - 2025-09-28
 
