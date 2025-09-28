@@ -1,0 +1,256 @@
+name: Automated Changelog PR
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - 'CHANGELOG.md'
+      - '.github/workflows/changelog-pr.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  create-changelog-pr:
+    runs-on: ubuntu-latest
+    # Skip if the commit message indicates a release commit
+    if: "!contains(github.event.head_commit.message, 'chore: release v')"
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          # Use the built-in GITHUB_TOKEN with enhanced permissions
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+
+      - name: Cache cargo tools
+        uses: actions/cache@v4
+        with:
+          path: ~/.cargo/bin
+          key: ${{ runner.os }}-cargo-tools-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-tools-
+
+      - name: Install cargo-edit and git-cliff
+        run: |
+          # Only install if not cached
+          command -v cargo-edit >/dev/null || cargo install cargo-edit
+          command -v git-cliff >/dev/null || cargo install git-cliff
+
+      - name: Check for new commits since last tag
+        id: check_commits
+        run: |
+          set -e
+          LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          
+          if [ -z "$LATEST_TAG" ]; then
+            echo "No previous tags found, creating initial release"
+            echo "has_commits=true" >> $GITHUB_OUTPUT
+            echo "latest_tag=none" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          
+          echo "Latest tag: $LATEST_TAG"
+          
+          # Check for conventional commits since last tag
+          COMMITS=$(git log --oneline ${LATEST_TAG}..HEAD \
+            --grep="^feat" --grep="^fix" --grep="^docs" --grep="^style" \
+            --grep="^refactor" --grep="^perf" --grep="^test" \
+            --grep="^chore" --grep="^ci" --grep="^build" --grep="^revert" \
+            --extended-regexp || true)
+          
+          if [ -z "$COMMITS" ]; then
+            echo "No conventional commits found since $LATEST_TAG"
+            echo "has_commits=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          
+          echo "Found commits since $LATEST_TAG:"
+          echo "$COMMITS"
+          echo "has_commits=true" >> $GITHUB_OUTPUT
+          echo "latest_tag=$LATEST_TAG" >> $GITHUB_OUTPUT
+
+      - name: Skip if no commits
+        if: steps.check_commits.outputs.has_commits == 'false'
+        run: |
+          echo "No conventional commits found. Skipping release PR creation."
+          exit 0
+
+      - name: Determine version bump type
+        if: steps.check_commits.outputs.has_commits == 'true'
+        id: bump_type
+        run: |
+          set -e
+          LATEST_TAG="${{ steps.check_commits.outputs.latest_tag }}"
+          BUMP_TYPE="patch"
+          
+          if [ "$LATEST_TAG" = "none" ]; then
+            # First release - default to minor if we have features
+            if git log --oneline --grep="^feat" HEAD | head -1 >/dev/null 2>&1; then
+              BUMP_TYPE="minor"
+              echo "First release with features -> minor bump"
+            else  
+              echo "First release without features -> patch bump"
+            fi
+          else
+            # Check for breaking changes (BREAKING CHANGE or feat! or fix!)
+            if git log --oneline ${LATEST_TAG}..HEAD | grep -E "(BREAKING CHANGE|[a-z]+!:)" >/dev/null 2>&1; then
+              BUMP_TYPE="major"
+              echo "🚨 Breaking changes detected -> major bump"
+            elif git log --oneline ${LATEST_TAG}..HEAD | grep -E "^[0-9a-f]+ feat" >/dev/null 2>&1; then
+              BUMP_TYPE="minor"
+              echo "✨ New features detected -> minor bump"
+            else
+              echo "🔧 Only fixes/patches detected -> patch bump"
+            fi
+          fi
+          
+          echo "bump_type=$BUMP_TYPE" >> $GITHUB_OUTPUT
+          echo "Determined bump type: $BUMP_TYPE"
+
+      - name: Bump version and generate changelog
+        if: steps.check_commits.outputs.has_commits == 'true'
+        id: version_bump
+        run: |
+          set -e
+          
+          # Get current version
+          CURRENT_VERSION=$(grep '^version = ' Cargo.toml | head -1 | sed 's/version = "\(.*\)"/\1/')
+          echo "Current version: $CURRENT_VERSION"
+          
+          # Perform version bump
+          echo "Running: cargo set-version --workspace --bump ${{ steps.bump_type.outputs.bump_type }}"
+          cargo set-version --workspace --bump ${{ steps.bump_type.outputs.bump_type }}
+          
+          # Get new version
+          NEW_VERSION=$(grep '^version = ' Cargo.toml | head -1 | sed 's/version = "\(.*\)"/\1/')
+          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+          
+          # Generate changelog with git-cliff
+          echo "Generating changelog with git-cliff..."
+          git-cliff --tag "v$NEW_VERSION" -o CHANGELOG.md
+          
+          echo "✅ Version bumped from $CURRENT_VERSION to $NEW_VERSION"
+          echo "✅ Changelog generated successfully"
+
+      - name: Check for existing release PR
+        if: steps.check_commits.outputs.has_commits == 'true'
+        id: check_pr
+        run: |
+          set -e
+          # Check if there's already a release PR open
+          EXISTING_PR=$(gh pr list --state open --search "in:title release v" --json number,title --jq '.[0].number' 2>/dev/null || echo "")
+          
+          if [ -n "$EXISTING_PR" ] && [ "$EXISTING_PR" != "null" ]; then
+            echo "existing_pr=$EXISTING_PR" >> $GITHUB_OUTPUT
+            echo "Found existing release PR: #$EXISTING_PR"
+          else
+            echo "existing_pr=" >> $GITHUB_OUTPUT
+            echo "No existing release PR found"
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create or update release PR
+        if: steps.check_commits.outputs.has_commits == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -e
+          NEW_VERSION="${{ steps.version_bump.outputs.new_version }}"
+          BRANCH_NAME="release/v$NEW_VERSION"
+          CURRENT_BRANCH=$(git branch --show-current)
+          
+          echo "Creating release PR for v$NEW_VERSION"
+          
+          # Configure git
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          
+          # Check if branch already exists remotely
+          if git ls-remote --exit-code --heads origin $BRANCH_NAME >/dev/null 2>&1; then
+            echo "Branch $BRANCH_NAME already exists, checking out..."
+            git fetch origin $BRANCH_NAME
+            git checkout -B $BRANCH_NAME origin/$BRANCH_NAME
+          else
+            echo "Creating new branch: $BRANCH_NAME"
+            git checkout -b $BRANCH_NAME
+          fi
+          
+          # Stage and commit changes
+          git add Cargo.toml cli/Cargo.toml web/Cargo.toml CHANGELOG.md
+          
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+          
+          git commit -m "chore: release v$NEW_VERSION
+
+          - Bump workspace version to $NEW_VERSION
+          - Update CHANGELOG.md with git-cliff
+          - Sync versions across all workspace members"
+          
+          # Push branch
+          git push origin $BRANCH_NAME --force
+          
+          # Create comprehensive PR body
+          cat > pr_body.md << EOF
+          ## 🚀 Release v$NEW_VERSION
+          
+          Automated release PR created by changelog automation workflow.
+          
+          ### 📋 Changes Included
+          - **Version Bump**: Updated workspace version to \`$NEW_VERSION\`
+          - **Changelog**: Generated with git-cliff from conventional commits
+          - **Workspace Sync**: Updated all package versions consistently
+          
+          ### 🔍 Review Checklist
+          - [ ] Verify changelog entries are accurate and complete
+          - [ ] Check that version bump type (${{ steps.bump_type.outputs.bump_type }}) is appropriate
+          - [ ] Confirm all workspace packages are properly updated
+          - [ ] Review for any sensitive information in changelog
+          
+          ### 🚀 Release Process
+          1. **Review** this PR and make any necessary edits to CHANGELOG.md
+          2. **Merge** this PR to trigger the automated release workflow
+          3. **Monitor** the release workflow for successful completion
+          
+          ### 🔧 Technical Details
+          - **Bump Type**: ${{ steps.bump_type.outputs.bump_type }}
+          - **Previous Tag**: ${{ steps.check_commits.outputs.latest_tag }}
+          - **Workflow**: [changelog-pr.yml](.github/workflows/changelog-pr.yml)
+          
+          ---
+          
+          *🤖 This PR was automatically created by GitHub Actions*
+          EOF
+          
+          if [ -n "${{ steps.check_pr.outputs.existing_pr }}" ]; then
+            # Update existing PR
+            echo "Updating existing PR #${{ steps.check_pr.outputs.existing_pr }}"
+            gh pr edit ${{ steps.check_pr.outputs.existing_pr }} \
+              --title "chore: release v$NEW_VERSION" \
+              --body-file pr_body.md
+            echo "✅ Updated existing PR #${{ steps.check_pr.outputs.existing_pr }}"
+          else
+            # Create new PR
+            echo "Creating new release PR..."
+            PR_URL=$(gh pr create \
+              --title "chore: release v$NEW_VERSION" \
+              --body-file pr_body.md \
+              --base main \
+              --head $BRANCH_NAME)
+            echo "✅ Created new release PR: $PR_URL"
+          fi
+          
+          # Switch back to original branch
+          git checkout $CURRENT_BRANCH

@@ -1,8 +1,29 @@
 #!/bin/bash
 set -euo pipefail
 
-# Simple version bump script based on conventional commits
-# Usage: ./bump-version.sh
+# DEPRECATED: Manual version bump script
+# This script is now superseded by the automated PR-based workflow (.github/workflows/changelog-pr.yml)
+# 
+# The new workflow automatically:
+# 1. Creates PRs with version bumps and changelog updates on each push to main
+# 2. Creates release tags when PRs are merged
+# 3. Triggers cargo-dist releases automatically
+#
+# This script is kept as a fallback for manual releases if needed.
+# Usage: ./scripts/bump-version.sh
+
+echo "⚠️  WARNING: This script is deprecated!"
+echo "ℹ️  The automated PR-based release workflow is now active."
+echo "ℹ️  This script should only be used for emergency manual releases."
+echo ""
+read -p "Continue with manual release? (y/N): " -n 1 -r
+echo ""
+if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    echo "Aborted. Use the automated workflow instead."
+    exit 1
+fi
+
+echo "Proceeding with manual release..."
 
 # Get the latest tag
 LATEST_TAG=$(git describe --tags --abbrev=0)
