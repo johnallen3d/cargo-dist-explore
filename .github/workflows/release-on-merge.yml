@@ -15,7 +15,7 @@ jobs:
     if: >
       github.event.pull_request.merged == true &&
       startsWith(github.event.pull_request.title, 'chore: release v')
-    
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -28,26 +28,26 @@ jobs:
         run: |
           PR_TITLE="${{ github.event.pull_request.title }}"
           VERSION=$(echo "$PR_TITLE" | sed -n 's/^chore: release v\(.*\)$/\1/p')
-          
+
           if [ -z "$VERSION" ]; then
             echo "❌ Could not extract version from PR title: $PR_TITLE"
             exit 1
           fi
-          
+
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "✅ Extracted version: $VERSION"
 
       - name: Validate version format
         run: |
           VERSION="${{ steps.extract_version.outputs.version }}"
-          
+
           # Validate semver format (basic check)
           if ! echo "$VERSION" | grep -E '^[0-9]+\.[0-9]+\.[0-9]+' >/dev/null; then
             echo "❌ Invalid version format: $VERSION"
             echo "Expected format: X.Y.Z"
             exit 1
           fi
-          
+
           echo "✅ Version format is valid: $VERSION"
 
       - name: Check if tag already exists
@@ -55,7 +55,7 @@ jobs:
         run: |
           VERSION="${{ steps.extract_version.outputs.version }}"
           TAG="v$VERSION"
-          
+
           if git tag -l | grep -q "^$TAG$"; then
             echo "tag_exists=true" >> $GITHUB_OUTPUT
             echo "⚠️  Tag $TAG already exists"
@@ -69,24 +69,24 @@ jobs:
         run: |
           VERSION="${{ steps.extract_version.outputs.version }}"
           TAG="v$VERSION"
-          
+
           # Configure git
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          
+
           # Create annotated tag
           git tag -a "$TAG" -m "Release $TAG
 
           Automated release created from PR merge.
-          
+
           This tag triggers the cargo-dist release workflow which will:
           - Build cross-platform binaries
           - Create GitHub release with changelog
           - Upload installers and artifacts"
-          
+
           # Push the tag
           git push origin "$TAG"
-          
+
           echo "🎉 Created and pushed tag: $TAG"
           echo "🚀 This will trigger the cargo-dist release workflow"
 
