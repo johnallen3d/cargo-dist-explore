@@ -54,7 +54,7 @@ git commit -m "chore: bump version to $NEW_VERSION"
 
 # Create tag
 echo "Creating tag v$NEW_VERSION..."
-git tag "v$NEW_VERSION"
+git tag -a "v$NEW_VERSION" -m "Release v$NEW_VERSION"
 
 echo "Version bumped to v$NEW_VERSION"
 echo "To push: git push origin main --tags"
