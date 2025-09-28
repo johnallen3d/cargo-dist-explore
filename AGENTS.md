@@ -32,8 +32,8 @@ This is a **Rust workspace** with **monolithic versioning**:
 
 ## Release Process
 **Automated PR-Based Release Workflow (ACTIVE):**
-1. Commit changes using conventional commit messages
-2. Push to `main` branch - automation triggers automatically
+1. Create feature branch and commit changes using conventional commit messages
+2. Create PR to `main` branch - automation triggers when PR is merged
 3. GitHub Actions automatically:
    - Analyzes commits since last tag
    - Determines bump type (patch/minor/major)
@@ -74,6 +74,8 @@ This provides simpler monolithic releases while maintaining professional changel
   - PAT enables tag creation to properly trigger cargo-dist releases
 
 ## Agent Guidelines
+- **Branch Protection**: Main branch is protected - NEVER push directly to main, always use PRs
+- **GitHub Flow**: Always create feature branches and PRs for changes
 - **Version Bumping**: Use conventional commits - automation handles everything
 - **Release PRs**: Review and merge release PRs created by automation
 - **Changelog**: Never manually edit - regenerated from git history
