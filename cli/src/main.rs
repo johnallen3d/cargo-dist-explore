@@ -2,7 +2,7 @@ use std::env;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
-    
+
     if args.len() > 1 {
         match args[1].as_str() {
             "--version" => {
@@ -23,8 +23,9 @@ fn main() {
             _ => {}
         }
     }
-    
+
     println!("CLI tool starting...");
     println!("Running command-line interface");
     println!("Use --help for usage information");
 }
+
