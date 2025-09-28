@@ -39,11 +39,14 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-cargo-tools-
 
+      - name: Install cargo-binstall for faster tool installation
+        run: |
+          curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash
+
       - name: Install cargo-edit and git-cliff
         run: |
-          # Install tools (use --force to handle cache conflicts)
-          cargo install cargo-edit --force
-          cargo install git-cliff --force
+          # Use cargo-binstall for faster installation (downloads pre-built binaries when available)
+          cargo binstall --no-confirm cargo-edit git-cliff
 
       - name: Check for new commits since last tag
         id: check_commits
