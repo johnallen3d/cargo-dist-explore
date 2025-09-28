@@ -18,6 +18,12 @@ fn main() {
                 println!("COMMANDS:");
                 println!("    version    Show version information");
                 println!("    help       Show this help message");
+                println!("    config     Show configuration information");
+                return;
+            }
+            "config" => {
+                println!("Configuration directory: ~/.config/cli");
+                println!("Default config file: ~/.config/cli/config.toml");
                 return;
             }
             _ => {}
