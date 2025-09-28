@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.2.0] - 2025-09-28
+
+### 🚀 Features
+
+- Add release flow documentation
+
 ## [3.1.1] - 2025-09-28
 
 ### 🐛 Bug Fixes
@@ -11,6 +17,10 @@ All notable changes to this project will be documented in this file.
 - Resolve git checkout conflicts in changelog PR workflow
 - Simplify branch handling to avoid merge conflicts
 - Correct PR search query to find existing release PRs
+
+### ⚙️ Miscellaneous Tasks
+
+- Release v3.1.1 ([#14](https://github.com/johnallen3d/cargo-dist-explore/issues/14))
 
 ## [3.1.0] - 2025-09-28
 
