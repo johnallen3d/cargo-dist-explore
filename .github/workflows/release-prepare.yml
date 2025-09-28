@@ -1,11 +1,11 @@
-name: Automated Changelog PR
+name: Release - Prepare
 
 on:
   push:
     branches: [main]
     paths-ignore:
       - 'CHANGELOG.md'
-      - '.github/workflows/changelog-pr.yml'
+      - '.github/workflows/release-prepare.yml'
   workflow_dispatch:
 
 permissions:
@@ -250,7 +250,7 @@ jobs:
           ### 🔧 Technical Details
           - **Bump Type**: ${{ steps.bump_type.outputs.bump_type }}
           - **Previous Tag**: ${{ steps.check_commits.outputs.latest_tag }}
-          - **Workflow**: [changelog-pr.yml](.github/workflows/changelog-pr.yml)
+          - **Workflow**: [release-prepare.yml](.github/workflows/release-prepare.yml)
 
           ---
 

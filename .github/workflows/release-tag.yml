@@ -1,7 +1,7 @@
-name: Create Release Tag
+name: Release - Tag
 
 # This workflow creates release tags when Release PRs are merged.
-# IMPORTANT: Uses RELEASE_PR_TOKEN (same as changelog-pr.yml) to trigger downstream workflows.
+# IMPORTANT: Uses RELEASE_PR_TOKEN (same as release-prepare.yml) to trigger downstream workflows.
 # The default GITHUB_TOKEN cannot trigger workflows for security reasons.
 
 on:
