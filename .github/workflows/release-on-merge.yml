@@ -42,8 +42,8 @@ jobs:
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "✅ Extracted version: $VERSION"
 
-       - name: Validate version format
-         run: |
+      - name: Validate version format
+        run: |
            VERSION="${{ steps.extract_version.outputs.version }}"
 
            # Validate semver format (basic check)
@@ -55,8 +55,8 @@ jobs:
 
            echo "✅ Version format is valid: $VERSION"
 
-       - name: Validate PR version matches code version
-         run: |
+      - name: Validate PR version matches code version
+        run: |
            PR_VERSION="${{ steps.extract_version.outputs.version }}"
            
            # Get the actual version from Cargo.toml
