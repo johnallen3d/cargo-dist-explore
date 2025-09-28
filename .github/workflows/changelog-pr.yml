@@ -39,15 +39,14 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-cargo-tools-
 
-      - name: Install cargo-binstall for faster tool installation
+      - name: Install git-cliff and cargo-edit
         run: |
-          curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash
-          echo "$HOME/.cargo/bin" >> $GITHUB_PATH
-
-      - name: Install cargo-edit and git-cliff
-        run: |
-          # Use cargo-binstall for faster installation (downloads pre-built binaries when available)
-          cargo binstall --no-confirm cargo-edit git-cliff
+          # Install git-cliff from GitHub releases (much faster)
+          curl -L "https://github.com/orhun/git-cliff/releases/latest/download/git-cliff-2.10.1-x86_64-unknown-linux-gnu.tar.gz" | tar -xzC /tmp
+          sudo mv /tmp/git-cliff-2.10.1/git-cliff /usr/local/bin/
+          
+          # Install cargo-edit (no pre-built binaries available, but use cached build)
+          cargo install cargo-edit
 
       - name: Check for new commits since last tag
         id: check_commits
