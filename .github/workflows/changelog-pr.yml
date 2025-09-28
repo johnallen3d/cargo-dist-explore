@@ -144,21 +144,37 @@ jobs:
           echo "✅ Version bumped from $CURRENT_VERSION to $NEW_VERSION"
           echo "✅ Changelog generated successfully"
 
-      - name: Check for existing release PR
-        if: steps.check_commits.outputs.has_commits == 'true'
-        id: check_pr
-        run: |
-          set -e
-          # Check if there's already a release PR open
-          EXISTING_PR=$(gh pr list --state open --search "in:title chore: release" --json number,title --jq '.[0].number' 2>/dev/null || echo "")
+       - name: Check for existing release PR
+         if: steps.check_commits.outputs.has_commits == 'true'
+         id: check_pr
+         run: |
+           set -e
+           NEW_VERSION="${{ steps.version_bump.outputs.new_version }}"
+           
+           # Check if there's already a release PR open for this EXACT version
+           # Use exact title match to avoid matching old release PRs
+           EXISTING_PR=$(gh pr list --state open --json number,title --jq ".[] | select(.title == \"chore: release v$NEW_VERSION\") | .number" 2>/dev/null || echo "")
 
-          if [ -n "$EXISTING_PR" ] && [ "$EXISTING_PR" != "null" ]; then
-            echo "existing_pr=$EXISTING_PR" >> $GITHUB_OUTPUT
-            echo "Found existing release PR: #$EXISTING_PR"
-          else
-            echo "existing_pr=" >> $GITHUB_OUTPUT
-            echo "No existing release PR found"
-          fi
+           # Also check for any other open release PRs that should be closed
+           OTHER_RELEASE_PRS=$(gh pr list --state open --json number,title --jq ".[] | select(.title | test(\"^chore: release v\")) | select(.title != \"chore: release v$NEW_VERSION\") | .number" 2>/dev/null || echo "")
+
+           if [ -n "$OTHER_RELEASE_PRS" ]; then
+             echo "Found stale release PRs, closing them..."
+             echo "$OTHER_RELEASE_PRS" | while read pr_number; do
+               if [ -n "$pr_number" ]; then
+                 echo "Closing stale release PR #$pr_number"
+                 gh pr close "$pr_number" --comment "Closing stale release PR - superseded by new release v$NEW_VERSION"
+               fi
+             done
+           fi
+
+           if [ -n "$EXISTING_PR" ] && [ "$EXISTING_PR" != "null" ]; then
+             echo "existing_pr=$EXISTING_PR" >> $GITHUB_OUTPUT
+             echo "Found existing release PR for v$NEW_VERSION: #$EXISTING_PR"
+           else
+             echo "existing_pr=" >> $GITHUB_OUTPUT
+             echo "No existing release PR found for v$NEW_VERSION"
+           fi
         env:
           GH_TOKEN: ${{ secrets.RELEASE_PR_TOKEN }}
 
