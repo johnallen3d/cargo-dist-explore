@@ -2,11 +2,25 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.1.0] - 2025-09-28
+
+### 🚀 Features
+
+- Implement automated changelog and release PR system
+
+### 🐛 Bug Fixes
+
+- Tagging syntax ([#4](https://github.com/johnallen3d/cargo-dist-explore/issues/4))
+
 ## [2.0.0] - 2025-09-28
 
 ### 🚀 Features
 
 - [**breaking**] Remove release-please and implement monolithic versioning
+
+### ⚙️ Miscellaneous Tasks
+
+- Bump version to 2.0.0
 
 ## [cli-v0.5.0] - 2025-09-27
 
