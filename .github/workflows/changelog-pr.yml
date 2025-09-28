@@ -41,12 +41,13 @@ jobs:
 
       - name: Install git-cliff and cargo-edit
         run: |
-          # Install git-cliff from GitHub releases (much faster)
+          # Install git-cliff from GitHub releases (fast binary download)
           curl -L "https://github.com/orhun/git-cliff/releases/latest/download/git-cliff-2.10.1-x86_64-unknown-linux-gnu.tar.gz" | tar -xzC /tmp
           sudo mv /tmp/git-cliff-2.10.1/git-cliff /usr/local/bin/
           
-          # Install cargo-edit (no pre-built binaries available, but use cached build)
-          cargo install cargo-edit
+          # Install cargo-edit from crates.io pre-compiled (using quickinstall mirror)
+          curl -L "https://github.com/cargo-bins/cargo-quickinstall/releases/latest/download/cargo-set-version-x86_64-unknown-linux-musl.tar.gz" | tar -xzC /tmp
+          sudo mv /tmp/cargo-set-version /usr/local/bin/
 
       - name: Check for new commits since last tag
         id: check_commits
