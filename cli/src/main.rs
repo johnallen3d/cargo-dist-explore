@@ -6,11 +6,11 @@ fn main() {
     if args.len() > 1 {
         match args[1].as_str() {
             "version" => {
-                println!("cargo-dist-explore CLI v{}", env!("CARGO_PKG_VERSION"));
+                println!("dist-explore CLI v{}", env!("CARGO_PKG_VERSION"));
                 return;
             }
             "help" => {
-                println!("cargo-dist-explore CLI v{}", env!("CARGO_PKG_VERSION"));
+                println!("dist-explore CLI v{}", env!("CARGO_PKG_VERSION"));
                 println!();
                 println!("USAGE:");
                 println!("    cli [COMMANDS]");
