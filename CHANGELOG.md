@@ -2,11 +2,25 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.1.1] - 2025-09-28
+
+### 🐛 Bug Fixes
+
+- Update release workflow tag pattern to match v-prefixed tags
+- Add --allow-dirty flag to cargo-dist workflow
+- Resolve git checkout conflicts in changelog PR workflow
+- Simplify branch handling to avoid merge conflicts
+- Correct PR search query to find existing release PRs
+
 ## [3.1.0] - 2025-09-28
 
 ### 🚀 Features
 
 - Remove config command ([#12](https://github.com/johnallen3d/cargo-dist-explore/issues/12))
+
+### ⚙️ Miscellaneous Tasks
+
+- Release v3.1.0 ([#13](https://github.com/johnallen3d/cargo-dist-explore/issues/13))
 
 ## [3.0.0] - 2025-09-28
 
