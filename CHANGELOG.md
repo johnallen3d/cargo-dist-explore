@@ -2,11 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.6.0] - 2025-09-28
+
+### 🚀 Features
+
+- Rename workflows to use 'Release -' prefix for better organization
+
 ## [3.5.0] - 2025-09-28
 
 ### 🚀 Features
 
 - Rename workflow to 'Create Release Tag' for clarity
+
+### ⚙️ Miscellaneous Tasks
+
+- Release v3.5.0 ([#27](https://github.com/johnallen3d/cargo-dist-explore/issues/27))
 
 ## [3.4.1] - 2025-09-28
 
