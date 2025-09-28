@@ -28,4 +28,3 @@ fn main() {
     println!("Running command-line interface");
     println!("Use --help for usage information");
 }
-println!("Release automation test complete!");
