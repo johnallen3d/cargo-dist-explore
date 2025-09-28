@@ -2,6 +2,30 @@
 
 All notable changes to this project will be documented in this file.
 
+## [cli-v0.5.0] - 2025-09-27
+
+### 🚀 Features
+
+- [**breaking**] Add release automation via release-please ([#1](https://github.com/johnallen3d/cargo-dist-explore/issues/1))
+
+### 🐛 Bug Fixes
+
+- Bootstrap release-please with current version manifest
+- Simplify release-please config for workspace
+- Use config files to prevent workspace member discovery
+- Replace workspace version inheritance with explicit versions
+- Configure release-please to target cli package instead of workspace root
+- Update release-please workflow to support PAT fallback
+
+### 🧪 Testing
+
+- Temporarily exclude web package to isolate release-please issue
+
+### ⚙️ Miscellaneous Tasks
+
+- *(main)* Release cli 0.4.0 ([#2](https://github.com/johnallen3d/cargo-dist-explore/issues/2))
+- *(main)* Release cli 0.5.0 ([#3](https://github.com/johnallen3d/cargo-dist-explore/issues/3))
+
 ## [0.3.1] - 2025-09-27
 
 ### 🐛 Bug Fixes
