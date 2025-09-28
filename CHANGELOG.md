@@ -2,11 +2,31 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.7.0] - 2025-09-28
+
+### 🚀 Features
+
+- Another test commit
+- Add confirmation message for release automation test ([#32](https://github.com/johnallen3d/cargo-dist-explore/issues/32))
+
+### 🐛 Bug Fixes
+
+- Regenerate cargo-dist workflow file to resolve sync issues
+- Rename cargo-dist workflow back to release.yml
+
+### 📚 Documentation
+
+- Update workflow filenames in AGENTS.md
+
 ## [3.6.0] - 2025-09-28
 
 ### 🚀 Features
 
 - Rename workflows to use 'Release -' prefix for better organization
+
+### ⚙️ Miscellaneous Tasks
+
+- Release v3.6.0 ([#28](https://github.com/johnallen3d/cargo-dist-explore/issues/28))
 
 ## [3.5.0] - 2025-09-28
 
