@@ -2,11 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.4.1] - 2025-09-28
+
+### 🐛 Bug Fixes
+
+- Rename automation plan to avoid cargo-dist confusion
+
 ## [3.4.0] - 2025-09-28
 
 ### 🚀 Features
 
 - Configure cargo-dist to include changelog in release notes ([#23](https://github.com/johnallen3d/cargo-dist-explore/issues/23))
+
+### ⚙️ Miscellaneous Tasks
+
+- Release v3.4.0 ([#24](https://github.com/johnallen3d/cargo-dist-explore/issues/24))
 
 ## [3.3.0] - 2025-09-28
 
