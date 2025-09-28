@@ -2,11 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.2.2] - 2025-09-28
+
+### ⚙️ Miscellaneous Tasks
+
+- Re-init cargo-dist
+
 ## [3.2.1] - 2025-09-28
 
 ### 🐛 Bug Fixes
 
 - Complete release automation by using existing RELEASE_PR_TOKEN
+
+### ⚙️ Miscellaneous Tasks
+
+- Release v3.2.1 ([#16](https://github.com/johnallen3d/cargo-dist-explore/issues/16))
 
 ## [3.2.0] - 2025-09-28
 
