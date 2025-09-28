@@ -12,6 +12,10 @@ All notable changes to this project will be documented in this file.
 
 - Tagging syntax ([#4](https://github.com/johnallen3d/cargo-dist-explore/issues/4))
 
+### 📚 Documentation
+
+- Update AGENTS.md with new PR-based release workflow
+
 ## [2.0.0] - 2025-09-28
 
 ### 🚀 Features
