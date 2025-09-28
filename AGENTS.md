@@ -31,19 +31,24 @@ This is a **Rust workspace** with **monolithic versioning**:
 - Single release process for all components
 
 ## Release Process
-**Automated Release Workflow:**
+**Automated PR-Based Release Workflow (ACTIVE):**
 1. Commit changes using conventional commit messages
-2. Run `./scripts/bump-version.sh` to:
-   - Analyze commits since last tag
-   - Determine bump type (patch/minor/major)
-   - Update workspace and package versions
-   - Generate changelog with git-cliff
-   - Create git tag
-3. Push with `git push origin main --tags`
-4. GitHub Actions (cargo-dist) automatically:
+2. Push to `main` branch - automation triggers automatically
+3. GitHub Actions automatically:
+   - Analyzes commits since last tag
+   - Determines bump type (patch/minor/major)
+   - Updates workspace and package versions
+   - Generates changelog with git-cliff
+   - Creates Release PR for team review
+4. Team reviews and merges Release PR
+5. On merge, second workflow creates git tag
+6. cargo-dist automatically:
    - Builds for x86_64-linux and aarch64-darwin
    - Creates GitHub release with changelog
    - Uploads shell installers
+
+**Manual Fallback (DEPRECATED):**
+- `./scripts/bump-version.sh` - Use only if automation fails
 
 **Key Tools:**
 - **cargo-set-version**: Workspace version management
@@ -56,9 +61,15 @@ This is a **Rust workspace** with **monolithic versioning**:
 
 This provides simpler monolithic releases while maintaining professional changelog generation and cross-platform distribution.
 
+## Workflow Files
+- `.github/workflows/changelog-pr.yml` - Creates release PRs automatically
+- `.github/workflows/release-on-merge.yml` - Creates tags when PRs merge
+- `.github/workflows/release.yml` - cargo-dist release automation
+
 ## Agent Guidelines
-- **Version Bumping**: Always use conventional commits and the bump script
+- **Version Bumping**: Use conventional commits - automation handles everything
+- **Release PRs**: Review and merge release PRs created by automation
 - **Changelog**: Never manually edit - regenerated from git history
-- **Releases**: Use the automated workflow; manual intervention rarely needed
-- **Testing**: Run `cargo test` before releases
-- **Distribution**: cargo-dist handles all platform builds and GitHub release creation
+- **Testing**: Run `cargo test` before merging release PRs
+- **Distribution**: cargo-dist handles all platform builds and GitHub releases
+- **Emergency**: Use `./scripts/bump-version.sh` only if automation fails
