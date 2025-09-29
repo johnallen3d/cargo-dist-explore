@@ -39,12 +39,12 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-cargo-tools-
 
-      - name: Install git-cliff and cargo-edit  
+      - name: Install git-cliff and cargo-edit
         run: |
           # Install git-cliff from GitHub releases (fast binary download)
           curl -L "https://github.com/orhun/git-cliff/releases/latest/download/git-cliff-2.10.1-x86_64-unknown-linux-gnu.tar.gz" | tar -xzC /tmp
           sudo mv /tmp/git-cliff-2.10.1/git-cliff /usr/local/bin/
-          
+
           # Install cargo-set-version using the cargo-quickinstall approach
           curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-quickinstall/main/install.sh | bash -s -- --no-binstall cargo-edit
 
@@ -150,7 +150,7 @@ jobs:
         run: |
            set -e
            NEW_VERSION="${{ steps.version_bump.outputs.new_version }}"
-           
+
            # Check if there's already a release PR open for this EXACT version
            # Use exact title match to avoid matching old release PRs
            EXISTING_PR=$(gh pr list --state open --json number,title --jq ".[] | select(.title == \"chore: release v$NEW_VERSION\") | .number" 2>/dev/null || echo "")
@@ -198,7 +198,7 @@ jobs:
           if git ls-remote --exit-code --heads origin $BRANCH_NAME >/dev/null 2>&1; then
             echo "Branch $BRANCH_NAME already exists, updating it..."
             git fetch origin $BRANCH_NAME
-            
+
             # For existing release branches, reset them to current main + new changes
             # This avoids merge conflicts from previous branch state
             echo "Resetting existing release branch to current main state..."
