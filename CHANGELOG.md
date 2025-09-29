@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.7.1] - 2025-09-29
+
+### 🐛 Bug Fixes
+
+- Invalid syntax ([#33](https://github.com/johnallen3d/cargo-dist-explore/issues/33))
+
+### 📚 Documentation
+
+- Add release workflow diagram to README
+
+### ⚙️ Miscellaneous Tasks
+
+- Cleanup ([#35](https://github.com/johnallen3d/cargo-dist-explore/issues/35))
+
 ## [3.7.0] - 2025-09-28
 
 ### 🚀 Features
@@ -17,6 +31,10 @@ All notable changes to this project will be documented in this file.
 ### 📚 Documentation
 
 - Update workflow filenames in AGENTS.md
+
+### ⚙️ Miscellaneous Tasks
+
+- Release v3.7.0 ([#31](https://github.com/johnallen3d/cargo-dist-explore/issues/31))
 
 ## [3.6.0] - 2025-09-28
 
