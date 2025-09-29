@@ -9,26 +9,26 @@ graph TD
     A[Developer pushes commit to main] --> B{Conventional commit?}
     B -->|Yes| C[Release - Prepare workflow triggers]
     B -->|No| D[No release actions]
-    
+
     C --> E[Determine version bump type]
     E --> F[cargo set-version --bump]
     F --> G[git-cliff --tag vX.Y.Z]
     G -->|⚠️ Tag doesn't exist yet| H[git-cliff adds date suffix]
     H --> I[Create/update release branch]
     I --> J[Create/update Release PR]
-    
+
     J --> K[Developer reviews Release PR]
     K --> L[Developer merges Release PR]
-    
+
     L --> M[Release - Tag workflow triggers]
     M --> N[Create git tag vX.Y.Z-YYYY-MM-DD]
-    
+
     N --> O[Release workflow triggers on tag]
     O --> P[cargo-dist plan]
     P --> Q[Build artifacts]
     Q --> R[Create GitHub release]
     R --> S[Upload artifacts & installers]
-    
+
     style H fill:#ffcccc
     style N fill:#ffcccc
     style G fill:#fff2cc
